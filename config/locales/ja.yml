@@ -1,0 +1,22 @@
+ja:
+  activerecord:
+    models:
+      user: '会員'
+    attributes:
+      user:
+        email: 'メールアドレス'
+        administrator: '管理者'
+        password: 'パスワード'
+        password_confirmation: 'パスワードの確認'
+    errors:
+      messages:
+  views:
+    pagination:
+      first: '&laquo;'
+      last: '&raquo;'
+      previous: '&lsaquo;'
+      next: '&rsaquo;'
+      truncate: "..."
+  enumerize:
+  errors:
+    attributes:

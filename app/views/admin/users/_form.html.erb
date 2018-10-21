@@ -1,0 +1,27 @@
+<div class="form-group">
+  <%= f.label :email, class: 'control-label col-md-2' %>
+  <div class="col-md-12">
+    <%= f.email_field :email, class: 'form-control' %>
+  </div>
+</div>
+
+<div class="form-group">
+  <%= f.label :password, class: 'control-label col-md-2' %>
+  <div class="col-md-12">
+    <%= f.password_field :password, class: 'form-control' %>
+  </div>
+</div>
+
+<div class="form-group">
+  <%= f.label :password_confirmation, class: 'control-label col-md-2' %>
+  <div class="col-md-12">
+    <%= f.password_field :password_confirmation, class: 'form-control' %>
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-md-12">
+    <%= f.label :administrator %>
+    <%= f.check_box :administrator, disabled: (current_user.id == params[:id].to_i) %>
+  </div>
+</div>

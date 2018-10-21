@@ -1,0 +1,33 @@
+<% @page_title = '管理画面：ユーザ一覧' %>
+
+<div class="page-header">
+  <h1>ユーザ一覧</h1>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th class="text-center">id</th>
+        <th class="text-center">メールアドレス</th>
+        <th class="text-center">管理者</th>
+        <th class="text-center"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+      <tr>
+        <td class="text-center"><%= user.id %></td>
+        <td><%= user.email %></td>
+        <td class="text-center"><%= '✓' if user.administrator? %></td>
+        <td>
+          <%= link_to '編集', edit_admin_user_path(user.id), class: 'btn btn-default btn-xs',
+            style: 'width: 5em' %>
+          <%= link_to_if (current_user.id != user.id), '削除', admin_user_path(user.id), method: :delete, class: 'btn btn-xs btn-danger', style: 'width: 5em;', data: { disable_with: '削除中'} %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<%= paginate @users %>
