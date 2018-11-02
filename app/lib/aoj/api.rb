@@ -4,10 +4,18 @@ require 'json'
 
 class Aoj::Api
 
-  AOJ_URI = 'https://judgeapi.u-aizu.ac.jp'
+  AOJ_BASE_URI = 'https://judgeapi.u-aizu.ac.jp'
 
   def api_get(path, params = {})
     request_api('get', path, params)
+  rescue Exception => e
+    raise e
+  end
+
+  def api_post(path, params = {})
+    request_api('post', path, params)
+  rescue Exception => e
+    raise e
   end
 
 
@@ -16,15 +24,23 @@ class Aoj::Api
   def request_api(method, path, params = {})
     raise Exception, 'pathを設定してください' unless path.present?
 
-    endpoint = "#{AOJ_URI}/#{path}"
-    encoded_params = URI.encode_www_form(params)
-    endpoint += '?' + encoded_params if encoded_params.present?
-    p "#{method.upcase} #{endpoint}"
-    uri = URI.parse(endpoint)
+    uri = URI.parse("#{AOJ_BASE_URI}/#{path}")
+    case method
+    when 'get'
+      uri.query = URI.encode_www_form(params)
+      req = Net::HTTP::Get.new uri
+    when 'post'
+      req = Net::HTTP::Post.new uri.path
+      req.content_type = 'application/json'
+      req.body = params.to_json
+    else
+      raise Exception, "想定外のmethod(#{method})です"
+    end
+    p "#{method.upcase} #{uri}"
     begin
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-      response = http.send(method, uri.request_uri)
+      response = http.request req
       case response
       when Net::HTTPSuccess
         response = JSON.parse(response.body)

@@ -21,6 +21,7 @@ class Problem < ApplicationRecord
   has_many :user_problems, dependent: :destroy
   has_many :users, through: :user_problems
 
+
   # バリデーション
   validates :code,              presence: true,
                                 uniqueness: { case_sensitive: false }
@@ -39,6 +40,9 @@ class Problem < ApplicationRecord
 
 
   # メソッド
+  def solved?(user)
+    !!UserProblem.find_by(user_id: user.id)
+  end
 
 
   # プライベートメソッド

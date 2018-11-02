@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   delete 'logout' => 'sessions#destroy', as: 'logout'
 
   resources :users
+  resources :problems do
+    post :aoj, on: :collection
+  end
 
   namespace :admin do
     root to: 'users#index'

@@ -1,0 +1,44 @@
+<% @page_title = 'TOP' %>
+
+<div class="page-header">
+  <h1>問題一覧</h1>
+</div>
+
+<%= form_with url: aoj_problems_path do |f| %>
+  <%= f.text_field :name %>
+  <%= f.password_field :password %>
+  <%= f.submit %>
+<% end %>
+
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th class="text-center">ID</th>
+        <th class="text-center">volume</th>
+        <th class="text-center">コード</th>
+        <th class="text-center">タイトル</th>
+        <th class="text-center">ステータス</th>
+        <th class="text-center">解いたユーザ数</th>
+        <th class="text-center">提出数</th>
+        <th class="text-center">正答率</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @problems.each do |problem| %>
+      <tr>
+        <td class="text-center"><%= problem.id %></td>
+        <td class="text-center"><%= problem.volume %></td>
+        <td class="text-center"><%= problem.code %></td>
+        <td><%= problem.title %></td>
+        <td><%= problem.solved?(current_user)? '解いた' : '' %></td>
+        <td class="text-right"><%= problem.solved_user %></td>
+        <td class="text-right"><%= problem.submissions %></td>
+        <td class="text-cnter"><%= problem.success_rate %>%</td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<%= paginate @problems %>

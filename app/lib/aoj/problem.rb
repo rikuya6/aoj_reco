@@ -7,7 +7,7 @@ class Aoj::Problem < Aoj::Api
 
   def get_volume_problems(volume_id)
     set_volume_problems(volume_id)
-    convert_for_problem_model_attrs_hash!(volume_id)
+    convert_to_problem_model_attrs_hash!(volume_id)
   end
 
 
@@ -21,7 +21,7 @@ class Aoj::Problem < Aoj::Api
     @problems[volume_id] ||= get_problems(volume_id)
   end
 
-  def convert_for_problem_model_attrs_hash!(volume_id)
+  def convert_to_problem_model_attrs_hash!(volume_id)
     raise Exception, "@problems[#{volume_id}]が空です" unless @problems[volume_id].present?
 
     converted = []
@@ -33,7 +33,8 @@ class Aoj::Problem < Aoj::Api
         mmemory_limit: problem["problemMemoryLimit"],
         solved_user:   problem["solvedUser"],
         submissions:   problem["submissions"],
-        volume:        volume_id
+        volume:        volume_id,
+        success_rate:  problem["successRate"]
       }
     end
     @problems[volume_id] = converted

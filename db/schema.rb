@@ -40,13 +40,23 @@ ActiveRecord::Schema.define(version: 2018_00_00_000001) do
 
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
-    t.string "name", null: false
     t.boolean "administrator", default: false, null: false
+    t.string "code"
+    t.string "name"
+    t.integer "submissions", default: 0, null: false
+    t.integer "solved", default: 0, null: false
+    t.integer "accepted", default: 0, null: false
+    t.integer "wronganswer", default: 0, null: false
+    t.integer "timelimit", default: 0, null: false
+    t.integer "memorylimit", default: 0, null: false
+    t.integer "outputlimit", default: 0, null: false
+    t.integer "compileerror", default: 0, null: false
+    t.integer "runtimeerror", default: 0, null: false
+    t.datetime "last_submit_at"
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["name"], name: "index_users_on_name", unique: true
   end
 
 end
