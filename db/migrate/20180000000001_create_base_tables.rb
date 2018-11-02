@@ -20,6 +20,7 @@ class CreateBaseTables < ActiveRecord::Migration[5.2]
       t.string    :mmemory_limit,   null: false
       t.integer   :solved_user,     null: false
       t.integer   :submissions,     null: false
+      t.string    :success_rate,    null: false
       t.string    :volume
       t.string    :large_cl
 

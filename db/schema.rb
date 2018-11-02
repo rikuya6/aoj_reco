@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2018_00_00_000001) do
     t.string "mmemory_limit", null: false
     t.integer "solved_user", null: false
     t.integer "submissions", null: false
+    t.string "success_rate", null: false
     t.string "volume"
     t.string "large_cl"
     t.datetime "created_at", null: false

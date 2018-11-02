@@ -9,6 +9,7 @@
 #  mmemory_limit :string           not null
 #  solved_user   :integer          not null
 #  submissions   :integer          not null
+#  success_rate  :string           not null
 #  volume        :string
 #  large_cl      :string
 #  created_at    :datetime         not null
@@ -32,6 +33,7 @@ class Problem < ApplicationRecord
   validates :mmemory_limit,     presence: true
   validates :solved_user,       presence: true
   validates :submissions,       presence: true
+  validates :success_rate,      presence: true
   # validates :volume
   # validates :large_cl
 

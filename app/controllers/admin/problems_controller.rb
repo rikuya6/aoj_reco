@@ -27,7 +27,7 @@ class Admin::ProblemsController < Admin::Base
   private
 
   def problem_params
-    attrs = [:code, :name, :time_limit, :mmemory_limit, :solved_user, :submissions, :vlolume, :large_cl]
+    attrs = [:code, :name, :time_limit, :mmemory_limit, :solved_user, :submissions, :success_rate, :vlolume, :large_cl]
     params.require(:problem).permit(attrs)
   end
 end
