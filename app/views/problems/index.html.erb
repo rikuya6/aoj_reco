@@ -1,15 +1,26 @@
 <% @page_title = 'TOP' %>
 
-<div class="page-header">
-  <h1>問題一覧</h1>
+<div class="row">
+  <div class="col-md-6">
+    <h1>問題一覧</h1>
+  </div>
+  <%= form_with url: aoj_problems_path do |f| %>
+    <div class="form-group">
+      <div class="col-md-2">
+        <%= f.label :aoj_id, class: 'control-label' %>
+        <%= f.text_field :aoj_id %>
+      </div>
+      <div class="col-md-2">
+        <%= f.label :aoj_password, class: 'control-label' %>
+        <%= f.password_field :aoj_password %>
+      </div>
+      <div class="col-md-2">
+        <label class='control-label'></label>
+        <%= f.submit '解答状況を更新する', class: 'btn btn-primary' %>
+      </div>
+    </div>
+  <% end %>
 </div>
-
-<%= form_with url: aoj_problems_path do |f| %>
-  <%= f.text_field :name %>
-  <%= f.password_field :password %>
-  <%= f.submit %>
-<% end %>
-
 
 <div class="table-responsive">
   <table class="table table-striped table-bordered">
@@ -27,16 +38,17 @@
     </thead>
     <tbody>
       <% @problems.each do |problem| %>
-      <tr>
-        <td class="text-center"><%= problem.id %></td>
-        <td class="text-center"><%= problem.volume %></td>
-        <td class="text-center"><%= problem.code %></td>
-        <td><%= problem.title %></td>
-        <td><%= problem.solved?(current_user)? '解いた' : '' %></td>
-        <td class="text-right"><%= problem.solved_user %></td>
-        <td class="text-right"><%= problem.submissions %></td>
-        <td class="text-cnter"><%= problem.success_rate %>%</td>
-      </tr>
+        <% solved = problem.solved?(current_user) %>
+        <tr class="<%= solved ? 'success' : nil %>">
+          <td class="text-center"><%= problem.id %></td>
+          <td class="text-center"><%= problem.volume %></td>
+          <td class="text-center"><%= problem.code %></td>
+          <td><%= problem.title %></td>
+          <td class="text-center">   <%= solved ? '解いた' : '' %></td>
+          <td class="text-right"><%= problem.solved_user %></td>
+          <td class="text-right"><%= problem.submissions %></td>
+          <td class="text-cnter"><%= problem.success_rate %>%</td>
+        </tr>
       <% end %>
     </tbody>
   </table>

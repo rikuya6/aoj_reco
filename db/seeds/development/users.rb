@@ -1,6 +1,5 @@
 User.create!(
   email: 'admin@aojreco.com',
-  name: 'admin',
   password: 'password',
   password_confirmation: 'password',
   administrator: true
@@ -8,7 +7,6 @@ User.create!(
 
 User.create!(
   email: 'user1@aojreco.com',
-  name: 'user1',
   password: 'password',
   password_confirmation: 'password'
 )
@@ -21,7 +19,6 @@ end
 names.each do |name|
   User.create!(
     email: Faker::Internet.safe_email(name),
-    name: name,
     password: 'password',
     password_confirmation: 'password'
   )

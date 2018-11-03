@@ -10,6 +10,11 @@ class Aoj::Problem < Aoj::Api
     convert_to_problem_model_attrs_hash!(volume_id)
   end
 
+  def get_user_solved_problem_codes(volume_id)
+    set_volume_problems(volume_id)
+    get_solved_problem_codes_from(volume_id)
+  end
+
 
   private
 
@@ -38,5 +43,14 @@ class Aoj::Problem < Aoj::Api
       }
     end
     @problems[volume_id] = converted
+  end
+
+  def get_solved_problem_codes_from(volume_id)
+    ids = []
+    @problems[volume_id].each do |problem|
+      ids << problem['id'] if problem['isSolved']
+    end
+
+    ids
   end
 end

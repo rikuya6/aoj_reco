@@ -41,7 +41,7 @@ class Problem < ApplicationRecord
 
   # メソッド
   def solved?(user)
-    !!UserProblem.find_by(user_id: user.id)
+    UserProblem.find_by(user_id: user.id, problem_id: id).try!(:solved)
   end
 
 

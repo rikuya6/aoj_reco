@@ -5,7 +5,17 @@ ja:
     attributes:
       user:
         email: 'メールアドレス'
-        name: '名前'
+        code: 'AOJ ID'
+        name: 'AOJ Name'
+        submissions: '提出数'
+        solved: '解いた問題数'
+        accepted: 'AC'
+        wronganswer: 'WA'
+        timelimit: 'TLE'
+        memorylimit: 'MLE'
+        outputlimit: 'OLE'
+        compileerror: 'CE'
+        runtimeerror: 'RE'
         administrator: '管理者'
         password: 'パスワード'
         password_confirmation: 'パスワードの確認'
@@ -154,6 +164,11 @@ ja:
         one: "%{model}にエラーが発生しました"
         other: "%{model}に%{count}個のエラーが発生しました"
   helpers:
+    label:
+      email: 'メールアドレス'
+      password: 'パスワード'
+      aoj_id: 'AIZU ONLINE JUDGE ID'
+      aoj_password: 'PASSWORD'
     select:
       prompt: 選択してください
     submit:

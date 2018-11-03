@@ -3,7 +3,7 @@
 
 $font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', '游ゴシック  Medium', meiryo, sans-serif;
 
-body{
+body {
   font-family: $font;
 }
 
@@ -34,18 +34,18 @@ footer {
   }
 }
 
-@mixin box_sizing {
-  -moz-box-sizing:    border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing:         border-box;
-}
+// @mixin box_sizing {
+//   -moz-box-sizing:    border-box;
+//   -webkit-box-sizing: border-box;
+//   box-sizing:         border-box;
+// }
 
-input, textarea, select, .uneditable-input {
-  border: 1px solid #bbb;
-  width: 100%;
-  margin-bottom: 15px;
-  @include box_sizing;
-}
+// input, textarea, select, .uneditable-input {
+//   border: 1px solid #bbb;
+//   width: 100%;
+//   margin-bottom: 15px;
+//   @include box_sizing;
+// }
 
 #error_explanation {
   color: red;
@@ -62,11 +62,11 @@ input, textarea, select, .uneditable-input {
   }
 }
 
-table {
-  margin-top: 10px;
-}
+// table {
+//   margin-top: 10px;
+// }
 
-.panel-height {
-  display: flex;
-  flex-wrap: wrap;
-}
+// .panel-height {
+//   display: flex;
+//   flex-wrap: wrap;
+// }

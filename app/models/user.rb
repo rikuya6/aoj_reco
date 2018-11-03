@@ -36,7 +36,6 @@ class User < ApplicationRecord
   # フック
   before_validation :check_last_submit_at
   before_save { email.downcase! }
-  after_save :update_user_problems!
 
 
   # バリデーション
@@ -74,14 +73,9 @@ class User < ApplicationRecord
   end
 
   def check_last_submit_at
-    return unless last_submit_at_was.present?
-    if last_submit_at_was < last_submit_at
-      self.changed = true
-    end
-  end
-
-  def update_user_problems!
-    return unless changed
-
+    return self.changed = false if last_submit_at.blank?
+    return self.changed = true if last_submit_at_was.blank?
+    return self.changed = true if last_submit_at_was.to_s.to_datetime < last_submit_at.to_s.to_datetime
+    self.changed = false
   end
 end

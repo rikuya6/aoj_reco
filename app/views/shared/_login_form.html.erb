@@ -1,9 +1,20 @@
-<div>
-  <h1>ログイン</h1>
-  <%= form_tag :login, method: :post do %>
-    <%= text_field_tag 'email' %>
-    <%= password_field_tag 'password' %>
-    <%= submit_tag 'ログイン', class: 'btn btn-primary' %>
+<div class="row">
+  <%= form_with url: :login do |f| %>
+    <div class="col-md-3">
+      <%= f.label :email, class: 'control-label' %>
+      <%= f.text_field :email %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :password, class: 'control-label' %>
+      <%= f.password_field :password %>
+    </div>
+    <div class="col-md-3">
+      <label class='control-label'></label>
+      <%= f.submit 'ログイン', class: 'btn btn-primary' %>
+    </div>
+    <div class="col-md-3">
+      <label class='control-label'></label>
+      <%= button_to '新規登録', new_user_path, class: 'btn btn-primary' %>
+    </div>
   <% end %>
-  <%= link_to '新規登録', new_user_path %>
 </div>

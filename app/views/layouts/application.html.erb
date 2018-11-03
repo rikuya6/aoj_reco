@@ -16,33 +16,24 @@
     <!-- ヘッダ -->
     <div class="navbar navbar-default navbar-static-top">
       <div class="container">
-        <%= render 'shared/header' %>
+        <div class="row">
+          <%= render 'shared/header' %>
+        </div>
       </div>
     </div>
     <!-- 本体 -->
-    <% unless current_user %>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-9">
-            <%= render 'shared/flash' %>
-            <%= yield %>
-          </div>
-          <div class="col-md-3">
-            <div class="well sidebar-nav">
-              <%= render 'shared/sidebar' %>
-            </div><!--/sidebar -->
-          </div>
-        </div><!--/row-->
-        <%= render 'shared/footer' %>
-      </div>
-    <% else %>
-      <div class="container">
-        <div class="row">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
           <%= render 'shared/flash' %>
           <%= yield %>
         </div>
+      </div><!--/row-->
+    </div><!--/container-->
+    <div class="container">
+      <div class="row">
         <%= render 'shared/footer' %>
       </div>
-    <% end %>
+    </div>
   </body>
 </html>

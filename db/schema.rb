@@ -34,8 +34,8 @@ ActiveRecord::Schema.define(version: 2018_00_00_000001) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["problem_id"], name: "index_user_problems_on_problem_id"
+    t.index ["user_id", "problem_id"], name: "index_user_problems_on_user_id_and_problem_id", unique: true
     t.index ["user_id"], name: "index_user_problems_on_user_id"
-    t.index [nil, nil], name: "index_user_problems_on_user_and_problem", unique: true
   end
 
   create_table "users", force: :cascade do |t|

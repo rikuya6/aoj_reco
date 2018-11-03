@@ -45,7 +45,7 @@ class CreateBaseTables < ActiveRecord::Migration[5.2]
 
       t.timestamps null: false
     end
-    add_index :user_problems, [:user, :problem], unique: true
+    add_index :user_problems, [:user_id, :problem_id], unique: true
   end
 
   def self.down

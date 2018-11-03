@@ -10,12 +10,22 @@ class Aoj::Session < Aoj::Api
   end
 
   def destroy
+    begin
+      api_destroy
+    rescue Exception => e
+      p e
+      raise Exception, e
+    end
   end
 
   private
 
   def api_create(params)
     api_post('session', params)
+  end
+
+  def api_destroy
+    api_delete('session')
   end
 
   def convert_to_user_model_atter_hash(response)
