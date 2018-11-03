@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   before_action :set_locale
-  # protect_from_forgery with: :exception
 
   class Forbidden < StandardError; end
   class NotFound < StandardError; end
@@ -56,5 +55,16 @@ class ApplicationController < ActionController::Base
 
   def save_location
     session[:back_url] = request.url if request.get?
+  end
+
+  def login_required
+    save_location
+    redirect_to :root, notice: 'ログインしてください。' unless current_user
+  end
+
+  def user_authorization
+    @user = User.find_by(id: params[:user_id])
+    @user ||= User.find_by(id: params[:id]) if @user.nil?
+    redirect_to :root unless @user == current_user
   end
 end

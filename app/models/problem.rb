@@ -41,6 +41,7 @@ class Problem < ApplicationRecord
 
   # メソッド
   def solved?(user)
+    return false unless user.present?
     UserProblem.find_by(user_id: user.id, problem_id: id).try!(:solved)
   end
 
