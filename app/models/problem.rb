@@ -1,0 +1,51 @@
+# == Schema Information
+#
+# Table name: problems
+#
+#  id            :integer          not null, primary key
+#  code          :string           not null
+#  title         :string           not null
+#  time_limit    :string           not null
+#  mmemory_limit :string           not null
+#  solved_user   :integer          not null
+#  submissions   :integer          not null
+#  success_rate  :string           not null
+#  volume        :string
+#  large_cl      :string
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+
+class Problem < ApplicationRecord
+  # 関連
+  has_many :user_problems, dependent: :destroy
+  has_many :users, through: :user_problems
+
+
+  # バリデーション
+  validates :code,              presence: true,
+                                uniqueness: { case_sensitive: false }
+  validates :title,             presence: true,
+                                length: {
+                                  allow_blank: true,
+                                  maximum: 255,
+                                }
+  validates :time_limit,        presence: true
+  validates :mmemory_limit,     presence: true
+  validates :solved_user,       presence: true
+  validates :submissions,       presence: true
+  validates :success_rate,      presence: true
+  # validates :volume
+  # validates :large_cl
+
+
+  # メソッド
+  def solved?(user)
+    return false unless user.present?
+    UserProblem.find_by(user_id: user.id, problem_id: id).try!(:solved)
+  end
+
+
+  # プライベートメソッド
+  private
+end

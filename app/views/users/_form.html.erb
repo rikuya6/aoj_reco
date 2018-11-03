@@ -3,6 +3,63 @@
   <%= f.email_field :email, class: 'form-control' %>
 </div>
 
+<% if edit? %>
+  <div class="form-group">
+    <%= f.label :code, class: 'control-label' %>
+    <%= f.text_field :code, disabled: true, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :name, class: 'control-label' %>
+    <%= f.text_field :name, disabled: true, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :submissions, class: 'control-label' %>
+    <%= f.number_field :submissions, disabled: true, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :solved, class: 'control-label' %>
+    <%= f.number_field :solved, disabled: true, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :accepted, class: 'control-label' %>
+    <%= f.number_field :accepted, disabled: true, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :wronganswer, class: 'control-label' %>
+    <%= f.number_field :wronganswer, disabled: true, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :timelimit, class: 'control-label' %>
+    <%= f.number_field :timelimit, disabled: true, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :memorylimit, class: 'control-label' %>
+    <%= f.number_field :memorylimit, disabled: true, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :outputlimit, class: 'control-label' %>
+    <%= f.number_field :outputlimit, disabled: true, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :compileerror, class: 'control-label' %>
+    <%= f.number_field :compileerror, disabled: true, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :runtimeerror, class: 'control-label' %>
+    <%= f.number_field :runtimeerror, disabled: true, class: 'form-control' %>
+  </div>
+<% end %>
+
 <div class="form-group">
   <%= f.label :password, class: 'control-label' %>
   <%= f.password_field :password, class: 'form-control' %>

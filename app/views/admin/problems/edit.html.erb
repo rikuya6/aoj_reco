@@ -1,0 +1,16 @@
+<% @page_title = '管理画面：問題編集' %>
+
+<div class="page-header">
+  <h1>問題の編集</h1>
+</div>
+
+<%= render 'shared/errors', obj: @problem %>
+
+<%= form_for [:admin, @problem], class: 'form-horizontal' do |f| %>
+  <%= render 'form', f: f %>
+  <div class="form-group">
+    <div class="col-md-offset-10 col-md-2">
+      <%= f.submit '問題を更新する', class: 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

@@ -1,10 +1,13 @@
-<%= link_to 'ページトップ', root_path, class: "navbar-brand" %>
-<div class="navbar-collapse collapse navbar-responsive-collapse">
-  <ul class="nav navbar-nav">
+<div id="navbar" class="navbar-collapse collapse">
+  <ul class="nav navbar-nav navbar-right">
     <% if current_user %>
-    <li><%= link_to current_user.email + 'さん', edit_user_path(current_user) %></li>
-    <li><%= link_to '管理画面', :admin_root if current_user.try(:administrator?) %></li>
-    <li><%= link_to 'ログアウト', logout_path, method: :delete %></li>
-    <% end %>
+      <li><%= link_to current_user.email + 'さん', edit_user_path(current_user) %></li>
+      <li><%= link_to '管理画面', :admin_root if current_user.try!(:administrator?) %></li>
+      <li><%= link_to 'ログアウト', logout_path, method: :delete %></li>
+    <% else %>
+      <li><%= link_to '新規登録', new_user_path %></li>
+      <li><%= link_to 'ログイン', new_login_path %></li>
+    <% end%>
+    <li><%= link_to 'About', about_path %></li>
   </ul>
 </div>

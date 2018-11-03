@@ -1,5 +1,8 @@
 class SessionsController < ApplicationController
 
+  def new
+  end
+
   def create
     user = User.find_by(email: params[:email].downcase)
     if user && user.authenticate(params[:password])
@@ -7,12 +10,12 @@ class SessionsController < ApplicationController
       if user.administrator?
         redirect_to :admin_root
       else
-        redirect_back_or edit_user_path(user.id)
+        redirect_back_or root_path
       end
       flash[:notice] = 'ログインしました。'
     else
       flash[:alert] = 'メールアドレスとパスワードが一致しません'
-      redirect_to :root
+      redirect_to new_login_url
     end
   end
 

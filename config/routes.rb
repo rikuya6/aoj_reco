@@ -1,16 +1,18 @@
 Rails.application.routes.draw do
   root 'top#index'
+  get 'edit_problems' => 'top#edit_aoj', as: :edit_aoj
+  post 'update_problems' => 'top#update_aoj', as: :update_aoj
   get 'about'  => 'top#about', as: 'about'
-  resource :sessions, only: [:create, :destroy], as: 'login', path: 'login'
+  get 'login' => 'sessions#new', as: 'new_login'
+  post 'login' => 'sessions#create', as: 'login'
   delete 'logout' => 'sessions#destroy', as: 'logout'
 
-  resources :users do
-    resources :orders, only: [:index, :show, :destroy]
-  end
+  resources :users
 
   namespace :admin do
-    root to: 'users#index'
+    root to: 'problems#index'
     resources :users
+    resources :problems
   end
 
   match '*anything' => 'top#not_found', via: [:get, :post, :patch, :delete]
