@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2018_00_00_000001) do
     t.integer "submissions", null: false
     t.string "success_rate", null: false
     t.string "volume"
+    t.float "difficulty"
     t.string "large_cl"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

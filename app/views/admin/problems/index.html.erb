@@ -15,6 +15,7 @@
         <th class="text-center">解いたユーザ数</th>
         <th class="text-center">提出数</th>
         <th class="text-center">正答率</th>
+        <th class="text-center">難易度</th>
         <th class="text-center"></th>
       </tr>
     </thead>
@@ -28,6 +29,7 @@
         <td class="text-right"><%= problem.solved_user %></td>
         <td class="text-right"><%= problem.submissions %></td>
         <td class="text-cnter"><%= problem.success_rate %>%</td>
+        <td class="text-cnter"><%= problem.difficulty %></td>
         <td>
           <%= link_to '編集', edit_admin_problem_path(problem.id), class: 'btn btn-default btn-xs',
             style: 'width: 5em' %>

@@ -19,6 +19,10 @@ class ProblemsController < MemberController
     end
   end
 
+  def recommend
+    @recommend = Problem.recommend(current_user)
+  end
+
 
   private
 
@@ -34,7 +38,7 @@ class ProblemsController < MemberController
         user_problem = current_user.user_problems.find_or_initialize_by(problem_id: Problem.find_by(code: code).id)
         user_problem.update_attributes({ solved: true })
       end
-      break # @TODO 暫定 開発中のみ
+      # break # @TODO 暫定 開発中のみ
     end
   end
 end

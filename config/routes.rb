@@ -1,13 +1,13 @@
 Rails.application.routes.draw do
   root 'top#index'
-  get 'edit_problems' => 'top#edit_aoj', as: :edit_aoj
-  post 'update_problems' => 'top#update_aoj', as: :update_aoj
   get 'about'  => 'top#about', as: 'about'
   get 'login' => 'sessions#new', as: 'new_login'
   post 'login' => 'sessions#create', as: 'login'
   delete 'logout' => 'sessions#destroy', as: 'logout'
 
   resources :users
+  resource :problems, only: [:edit, :update]
+  get 'recommend' => 'problems#recommend'
 
   namespace :admin do
     root to: 'problems#index'
