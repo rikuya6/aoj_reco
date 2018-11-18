@@ -1,5 +1,5 @@
 <div class="container">
-  <%= form_with url: update_aoj_path, class: 'form-signin' do |f| %>
+  <%= form_with url: problems_path, method: :patch, class: 'form-signin' do |f| %>
     <h2 class="form-signin-heading">正解状況を更新する</h2>
     <%= f.label :aoj_id, class: 'sr-only' %>
     <%= f.text_field :aoj_id, class: 'form-control', placeholder: 'AOJのID' %>
