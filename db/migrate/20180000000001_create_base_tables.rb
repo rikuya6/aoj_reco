@@ -2,10 +2,10 @@ class CreateBaseTables < ActiveRecord::Migration[5.2]
   def self.up
     # ユーザ
     create_table :users do |t|
-      t.string    :email,            null: false
+      t.string    :email# ,            null: false
       t.boolean   :administrator,    null: false, default: false
-      t.string    :code
-      t.string    :name
+      t.string    :code,             null: false
+      t.string    :name#,             null: false
       t.integer   :submissions,      null: false, default: 0
       t.integer   :solved,           null: false, default: 0
       t.integer   :accepted,         null: false, default: 0
@@ -16,11 +16,12 @@ class CreateBaseTables < ActiveRecord::Migration[5.2]
       t.integer   :compileerror,     null: false, default: 0
       t.integer   :runtimeerror,     null: false, default: 0
       t.datetime  :last_submit_at
-      t.string    :password_digest,  null: false
+      t.string    :password_digest#,  null: false
 
       t.timestamps null: false
     end
     add_index :users, :email, unique: true
+    add_index :users, :code, unique: true
 
     # 問題
     create_table :problems do |t|
@@ -42,7 +43,6 @@ class CreateBaseTables < ActiveRecord::Migration[5.2]
     create_table :user_problems do |t|
       t.references :user,        null: false
       t.references :problem,     null: false
-      t.boolean    :solved,      null: false, default: false
 
       t.timestamps null: false
     end

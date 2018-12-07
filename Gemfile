@@ -17,6 +17,7 @@ gem 'bcrypt'
 gem 'rails-i18n'
 gem 'enumerize'
 gem 'kaminari'
+gem 'activerecord-import'
 
 group :development, :test do
   gem 'sqlite3'

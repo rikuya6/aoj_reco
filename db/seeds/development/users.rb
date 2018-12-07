@@ -1,25 +1,29 @@
-User.create!(
-  email: 'admin@aojreco.com',
-  password: 'password',
-  password_confirmation: 'password',
-  administrator: true
-)
+# User.create!(
+#   email: 'admin@aojreco.com',
+#   code: 'aojreco_admin',
+#   name: 'aojreco_admin',
+#   password: 'password',
+#   password_confirmation: 'password',
+#   administrator: true
+# )
 
-User.create!(
-  email: 'user1@aojreco.com',
-  password: 'password',
-  password_confirmation: 'password'
-)
-
-names = []
-3.times do
-  names <<  Faker::Internet.user_name(Faker::StarWars.character, %w(. _ -))
+aoj_u = Aoj::User.new
+number = 0
+import_users = []
+users_arr = []
+while aoj_u.has_next_users?
+  users_arr << aoj_u.get_users_by_page(number)
+  number += 1
 end
 
-names.each do |name|
-  User.create!(
-    email: Faker::Internet.safe_email(name),
-    password: 'password',
-    password_confirmation: 'password'
-  )
-end
+# random = SecureRandom.hex
+# users_arr.each_with_index do |users, i|
+#   p "users_#{i}"
+#   import_users << users.map do |user|
+#                     u = User.new(user)
+#                     u.password = random
+#                     u.password_confirmation = random
+#                     u
+#                   end
+# end
+User.import users_arr.flatten, on_duplicate_key_ignore: true

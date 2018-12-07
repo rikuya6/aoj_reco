@@ -19,11 +19,29 @@ class Aoj::Problem < Aoj::Api
   private
 
   def get_problems(volume_id)
-    api_get("problems/volumes/#{volume_id}")['problems']
+    path = Rails.root.join("db/seeds/aoj/aoj_problems_#{volume_id}.json")
+    if File.exist?(path)
+      p path
+      problems = get_problems_data_from(path)
+    else
+      problems = api_get("problems/volumes/#{volume_id}")['problems']
+      write_problems_data_to(path, problems) if problems.present?
+    end
+
+    problems
   end
 
   def set_volume_problems(volume_id)
     @problems[volume_id] ||= get_problems(volume_id)
+  end
+
+  def get_problems_data_from(path)
+    data = File.read(path)
+    JSON.parse(data)
+  end
+
+  def write_problems_data_to(path, problems)
+    File.write(path, JSON.dump(problems))
   end
 
   def convert_to_problem_model_attrs_hash!(volume_id)

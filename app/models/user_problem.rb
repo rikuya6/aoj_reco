@@ -21,7 +21,6 @@ class UserProblem < ApplicationRecord
                             uniqueness: { scope: :problem_id }
   validates :problem_id,    presence: true,
                             uniqueness: { scope: :user_id }
-  validates :solved,        presence: true
 
 
   # メソッド

@@ -31,7 +31,6 @@ ActiveRecord::Schema.define(version: 2018_00_00_000001) do
   create_table "user_problems", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "problem_id", null: false
-    t.boolean "solved", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["problem_id"], name: "index_user_problems_on_problem_id"
@@ -40,9 +39,9 @@ ActiveRecord::Schema.define(version: 2018_00_00_000001) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email", null: false
+    t.string "email"
     t.boolean "administrator", default: false, null: false
-    t.string "code"
+    t.string "code", null: false
     t.string "name"
     t.integer "submissions", default: 0, null: false
     t.integer "solved", default: 0, null: false
@@ -54,9 +53,10 @@ ActiveRecord::Schema.define(version: 2018_00_00_000001) do
     t.integer "compileerror", default: 0, null: false
     t.integer "runtimeerror", default: 0, null: false
     t.datetime "last_submit_at"
-    t.string "password_digest", null: false
+    t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_users_on_code", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

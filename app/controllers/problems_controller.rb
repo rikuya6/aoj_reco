@@ -36,7 +36,7 @@ class ProblemsController < MemberController
       codes = aoj_p.get_user_solved_problem_codes(volume_id)
       codes.each do |code|
         user_problem = current_user.user_problems.find_or_initialize_by(problem_id: Problem.find_by(code: code).id)
-        user_problem.update_attributes({ solved: true })
+        user_problem.save!
       end
       # break # @TODO 暫定 開発中のみ
     end

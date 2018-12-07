@@ -35,14 +35,17 @@ class User < ApplicationRecord
 
   # フック
   before_validation :check_last_submit_at
-  before_save { email.downcase! }
+  before_save { email.try!(:downcase!) }
 
 
   # バリデーション
   validate  :check_email
 
-  validates :email,           presence: true,
-                              uniqueness: { case_sensitive: false }
+  # validates :email,           presence: true,
+  #                            uniqueness: { case_sensitive: false }
+  validates :code,            presence: true,
+                              uniqueness: { case_sensitive: true }
+  # validates :name,            presence: true
   validates :submissions,     presence: true
   validates :solved,          presence: true
   validates :accepted,        presence: true
@@ -52,15 +55,15 @@ class User < ApplicationRecord
   validates :outputlimit,     presence: true
   validates :compileerror,    presence: true
   validates :runtimeerror,    presence: true
-  validates :password,        presence: { on: :create },
-                              length: {
-                                allow_blank: true,
-                                minimum: 6,
-                              }
+  # validates :password,        presence: { on: :create },
+  #                             length: {
+  #                               allow_blank: true,
+  #                               minimum: 6,
+  #                             }
 
 
   # メソッド
-  has_secure_password
+  # has_secure_password
 
 
   # プライベートメソッド
