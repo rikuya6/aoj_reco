@@ -2,12 +2,12 @@ class Aoj::UserProblem < Aoj::Api
 
   def initialize(user_code)
     @user_problems = {}
-    @current_page = 0
+    @current_page = -1 # 0から始まるため
     @user_code = user_code
   end
 
   def get_user_problems
-    number = 1
+    number = 0
     while has_next_user_submission?
       user_problem =  get_user_submission_by_page(number)
       @user_problems[number] = user_problem if user_problem.present?
