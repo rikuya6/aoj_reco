@@ -1,10 +1,15 @@
-User.find_in_batches do |users|
-  import_user_problems = []
-  users.each do |user|
-    next if user.code == 'aojreco_admin'
-    user_problems = Aoj::UserProblem.new(user.code).get_user_problems
-    user_problems.uniq!
-    import_user_problems << user_problems
-  end
-  UserProblem.import import_user_problems.flatten
-end
+UserProblem.create!(user_id: 1, problem_id: 4)
+
+UserProblem.create!(user_id: 2, problem_id: 1)
+UserProblem.create!(user_id: 2, problem_id: 2)
+UserProblem.create!(user_id: 2, problem_id: 3)
+
+UserProblem.create!(user_id: 3, problem_id: 1)
+UserProblem.create!(user_id: 3, problem_id: 2)
+UserProblem.create!(user_id: 3, problem_id: 3)
+
+UserProblem.create!(user_id: 4, problem_id: 1)
+UserProblem.create!(user_id: 4, problem_id: 3)
+
+UserProblem.create!(user_id: 5, problem_id: 1)
+UserProblem.create!(user_id: 5, problem_id: 4)

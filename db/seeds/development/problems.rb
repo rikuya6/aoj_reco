@@ -1,11 +1,13 @@
-aoj_p = Aoj::Problem.new
-vlist = aoj_p.get_volume_list
-vlist.each do |volume_id|
-  problems = aoj_p.get_volume_problems(volume_id)
-  problems.each do |problem|
-    one = Problem.new(problem)
-    one.difficulty = 100 - one.success_rate.to_f
-    one.save!
-  end
-  # break # @TODO 暫定 開発中のみ
+1.upto(4) do |i|
+  Problem.create!(
+    code: i,
+    title: i,
+    time_limit: i,
+    mmemory_limit: i,
+    solved_user: i,
+    submissions: i,
+    success_rate: i,
+    volume: i,
+    difficulty: i
+  )
 end

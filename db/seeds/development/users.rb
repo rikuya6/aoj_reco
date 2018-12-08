@@ -7,23 +7,11 @@
 #   administrator: true
 # )
 
-aoj_u = Aoj::User.new
-number = 0
-import_users = []
-users_arr = []
-while aoj_u.has_next_users?
-  users_arr << aoj_u.get_users_by_page(number)
-  number += 1
-end
 
-# random = SecureRandom.hex
-# users_arr.each_with_index do |users, i|
-#   p "users_#{i}"
-#   import_users << users.map do |user|
-#                     u = User.new(user)
-#                     u.password = random
-#                     u.password_confirmation = random
-#                     u
-#                   end
-# end
-User.import users_arr.flatten, on_duplicate_key_ignore: true
+1.upto(5) do |i|
+  User.create!(
+    email: "2000#{i}@aojreco.com",
+    code: "2000#{i}",
+    name: "2000#{i}"
+  )
+end

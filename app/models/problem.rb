@@ -45,6 +45,28 @@ class Problem < ApplicationRecord
 
 
   # クラスメソッド
+  def self.estimate_prox
+    # 項目困難度の線形化
+    # 誤答のログ・オッズを求める
+    user_count = User.all.count # 受験者数　@TODO 受験者を誰にするか決める。
+    problem_count = Problem.count
+    wrong_odds = [] # 誤答のログ・オッズ
+    Problem.all.each do |problem|
+      correct_count = problem.user_problems.count
+      correct_rate = correct_count / user_count.to_f # 正答数
+      wrong_rate = 1 - correct_rate                  # 誤答率
+      wrong_odds << Math.log(wrong_rate / correct_rate)
+    end
+    # p wrong_odds
+    # 初期項目困難度の計算
+    wrong_odds_mean = wrong_odds.sum / problem_count # ログ・オッズの平均値
+    init_item_calibrations = wrong_odds.map { |w| w - wrong_odds_mean } # 初期項目困難度
+    # p init_item_calibrations
+  end
+
+
+
+
   def self.recommend(user)
     user_problem = user.user_problems.joins(:problem).order('problems.difficulty DESC').first
     return nil unless user_problem.present?
