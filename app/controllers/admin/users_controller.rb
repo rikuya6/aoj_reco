@@ -1,7 +1,7 @@
 class Admin::UsersController < Admin::Base
 
   def index
-    @users = User.order(administrator: :DESC, id: :ASC).page(params[:page])
+    @users = User.page(params[:page])
   end
 
   def edit
@@ -10,6 +10,7 @@ class Admin::UsersController < Admin::Base
 
   def update
     @user = User.find(params[:id])
+    return render 'edit' # @TODO 暫定: 更新すべき項目が未決定のため。
     @user.assign_attributes(user_params)
     if @user.save
       redirect_to admin_users_path, notice: 'ユーザを更新しました。'
@@ -27,7 +28,7 @@ class Admin::UsersController < Admin::Base
   private
 
   def user_params
-    attrs = [:email, :administrator, :password, :password_confirmation]
+    attrs = []
     params.require(:user).permit(attrs)
   end
 end

@@ -1,6 +1,8 @@
 <div id="navbar" class="navbar-collapse collapse">
   <ul class="nav navbar-nav navbar-right">
-    <li><%= link_to current_user.email + 'さん', edit_user_path(current_user) %></li>
-    <li><%= link_to 'ログアウト', logout_path, method: :delete %></li>
+    <% if current_admin.present? %>
+      <li><%=link_to 'アカウント設定', edit_admin_settings_path %></li>
+      <li><%= link_to 'ログアウト', admin_logout_path, method: :delete %></li>
+    <% end %>
   </ul>
 </div>

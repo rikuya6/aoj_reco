@@ -1,6 +1,8 @@
 <div class="col-sm-3 col-md-2 sidebar">
   <ul class="nav nav-sidebar">
-    <li class="<%= controller_active?('admin/problems') %>"><%= link_to '問題一覧', admin_problems_path %></li>
-    <li class="<%= controller_active?('admin/users') %>"><%= link_to 'ユーザ一覧', admin_users_path %></li>
+    <% if current_admin.present? %>
+      <li class="<%= controller_active?('admin/problems') %>"><%= link_to '問題一覧', admin_problems_path %></li>
+      <li class="<%= controller_active?('admin/users') %>"><%= link_to 'ユーザ一覧', admin_users_path %></li>
+    <% end %>
   </ul>
 </div>

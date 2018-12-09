@@ -1,10 +1,15 @@
 ja:
   activerecord:
     models:
+      admin: '管理者'
       user: '会員'
     attributes:
+      admin:
+        id: 'ID'
+        name: '名前'
+        password: 'パスワード'
+        password_confirmation: 'パスワードの確認'
       user:
-        email: 'メールアドレス'
         code: 'AOJ ID'
         name: 'AOJ Name'
         submissions: '提出数'
@@ -16,9 +21,6 @@ ja:
         outputlimit: 'OLE'
         compileerror: 'CE'
         runtimeerror: 'RE'
-        administrator: '管理者'
-        password: 'パスワード'
-        password_confirmation: 'パスワードの確認'
     errors:
       messages:
         record_invalid: "バリデーションに失敗しました: %{errors}"

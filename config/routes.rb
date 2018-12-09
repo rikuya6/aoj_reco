@@ -1,16 +1,13 @@
 Rails.application.routes.draw do
   root 'top#index'
   get 'about'  => 'top#about', as: 'about'
-  get 'login' => 'sessions#new', as: 'new_login'
-  post 'login' => 'sessions#create', as: 'login'
-  delete 'logout' => 'sessions#destroy', as: 'logout'
-
-  resources :users
-  resource :problems, only: [:edit, :update]
-  get 'recommend' => 'problems#recommend'
 
   namespace :admin do
-    root to: 'problems#index'
+    root to: 'sessions#new'
+    get 'login' => 'sessions#new', as: 'new_login'
+    post 'login' => 'sessions#create', as: 'login'
+    delete 'logout' => 'sessions#destroy', as: 'logout'
+    resource :settings, only: [:edit, :update]
     resources :users
     resources :problems
   end

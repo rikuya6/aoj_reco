@@ -17,12 +17,6 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def debug(object)
-    Rails.logger.debug '*' * 50
-    Rails.logger.debug object
-    Rails.logger.debug '*' * 50
-  end
-
   def rescue_400(exception)
     render 'errors/bad_request', status: 400, layout: 'error', formats: [:html]
   end
@@ -39,10 +33,15 @@ class ApplicationController < ActionController::Base
     render 'errors/internal_server_error', status: 500, layout: 'error', formats: [:html]
   end
 
-  def current_user
-    @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
+  # def current_user
+  #   @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
+  # end
+  # helper_method :current_user
+
+  def current_admin
+    @current_admin ||= Admin.find_by(id: session[:admin_id]) if session[:admin_id]
   end
-  helper_method :current_user
+  helper_method :current_admin
 
   def set_locale
     I18n.locale = params[:locale] || I18n.default_locale
@@ -62,9 +61,9 @@ class ApplicationController < ActionController::Base
     redirect_to :root, notice: 'ログインしてください。' unless current_user
   end
 
-  def user_authorization
-    @user = User.find_by(id: params[:user_id])
-    @user ||= User.find_by(id: params[:id]) if @user.nil?
-    redirect_to :root unless @user == current_user
-  end
+  # def user_authorization
+  #   @user = User.find_by(id: params[:user_id])
+  #   @user ||= User.find_by(id: params[:id]) if @user.nil?
+  #   redirect_to :root unless @user == current_user
+  # end
 end
