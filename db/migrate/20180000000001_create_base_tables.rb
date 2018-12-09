@@ -1,11 +1,16 @@
 class CreateBaseTables < ActiveRecord::Migration[5.2]
   def self.up
+    # 管理者
+    create_table :admins do |t|
+      t.string :name,             null: false
+      t.string :password_digest,  null: false
+      t.timestamps null: false
+    end
+
     # ユーザ
     create_table :users do |t|
-      t.string    :email# ,            null: false
-      t.boolean   :administrator,    null: false, default: false
       t.string    :code,             null: false
-      t.string    :name#,             null: false
+      t.string    :name,             null: false
       t.integer   :submissions,      null: false, default: 0
       t.integer   :solved,           null: false, default: 0
       t.integer   :accepted,         null: false, default: 0
@@ -15,12 +20,10 @@ class CreateBaseTables < ActiveRecord::Migration[5.2]
       t.integer   :outputlimit,      null: false, default: 0
       t.integer   :compileerror,     null: false, default: 0
       t.integer   :runtimeerror,     null: false, default: 0
-      t.datetime  :last_submit_at
-      t.string    :password_digest#,  null: false
+      t.float     :ability
 
       t.timestamps null: false
     end
-    add_index :users, :email, unique: true
     add_index :users, :code, unique: true
 
     # 問題
@@ -34,7 +37,6 @@ class CreateBaseTables < ActiveRecord::Migration[5.2]
       t.string    :success_rate,    null: false
       t.string    :volume
       t.float     :difficulty
-      t.string    :large_cl
 
       t.timestamps null: false
     end
@@ -53,5 +55,6 @@ class CreateBaseTables < ActiveRecord::Migration[5.2]
     drop_table :user_problems
     drop_table :users
     drop_table :problems
+    drop_table :admins
   end
 end

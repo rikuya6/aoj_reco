@@ -50,6 +50,15 @@ class Aoj::User < Aoj::Api
       converted << {
         code:          user['id'],
         name:          user['name'],
+        submissions:   user['status']['submissions']
+        solved:        user['status']['solved']
+        accepted:      user['status']['accepted']
+        wronganswer:   user['status']['wrongAnswer']
+        timelimit:     user['status']['timeLimit']
+        memorylimit:   user['status']['memoryLimit']
+        outputlimit:   user['status']['outputLimit']
+        compileerror:  user['status']['compileError']
+        runtimeerror:  user['status']['runtimeError']
       }
     end
 

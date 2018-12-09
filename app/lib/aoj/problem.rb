@@ -50,14 +50,14 @@ class Aoj::Problem < Aoj::Api
     converted = []
     @problems[volume_id].each do |problem|
       converted << {
-        code:          problem["id"],
-        title:         problem["name"],
-        time_limit:    problem["problemTimeLimit"],
-        mmemory_limit: problem["problemMemoryLimit"],
-        solved_user:   problem["solvedUser"],
-        submissions:   problem["submissions"],
+        code:          problem['id'],
+        title:         problem['name'],
+        time_limit:    problem['problemTimeLimit'],
+        mmemory_limit: problem['problemMemoryLimit'],
+        solved_user:   problem['solvedUser'],
+        submissions:   problem['submissions'],
         volume:        volume_id,
-        success_rate:  problem["successRate"]
+        success_rate:  problem['successRate']
       }
     end
     @problems[volume_id] = converted

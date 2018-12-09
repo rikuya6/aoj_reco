@@ -7,5 +7,4 @@ vlist.each do |volume_id|
     one.difficulty = 100 - one.success_rate.to_f
     one.save!
   end
-  # break # @TODO 暫定 開発中のみ
 end

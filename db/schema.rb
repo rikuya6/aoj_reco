@@ -12,6 +12,13 @@
 
 ActiveRecord::Schema.define(version: 2018_00_00_000001) do
 
+  create_table "admins", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "password_digest", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "problems", force: :cascade do |t|
     t.string "code", null: false
     t.string "title", null: false
@@ -22,7 +29,6 @@ ActiveRecord::Schema.define(version: 2018_00_00_000001) do
     t.string "success_rate", null: false
     t.string "volume"
     t.float "difficulty"
-    t.string "large_cl"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_problems_on_code", unique: true
@@ -39,10 +45,8 @@ ActiveRecord::Schema.define(version: 2018_00_00_000001) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email"
-    t.boolean "administrator", default: false, null: false
     t.string "code", null: false
-    t.string "name"
+    t.string "name", null: false
     t.integer "submissions", default: 0, null: false
     t.integer "solved", default: 0, null: false
     t.integer "accepted", default: 0, null: false
@@ -52,12 +56,10 @@ ActiveRecord::Schema.define(version: 2018_00_00_000001) do
     t.integer "outputlimit", default: 0, null: false
     t.integer "compileerror", default: 0, null: false
     t.integer "runtimeerror", default: 0, null: false
-    t.datetime "last_submit_at"
-    t.string "password_digest"
+    t.float "ability"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_users_on_code", unique: true
-    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
 end

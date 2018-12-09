@@ -41,7 +41,6 @@ class Problem < ApplicationRecord
   validates :submissions,       presence: true
   validates :success_rate,      presence: true
   # validates :volume
-  # validates :large_cl
 
 
   # クラスメソッド
@@ -58,6 +57,18 @@ class Problem < ApplicationRecord
     # p '最終項目困難度', item_finals
     person_finals = calc_final_calibrations(item_u, person_u, person[:init_person_measures]) # 最終受験者能力
     # p '最終受験者能力', person_finals
+
+    # モデルの更新
+    Problem.order(:id).each do |one|
+      one.difficulty = person_finals[one.id - 1]
+      one.save!
+    end
+    user_problems = UserProblem.group(:user_id).having('count_all >= 50').count # 「項目」となる問題を解いたユーザのみを利用する
+    user_problems.each do |user_id, _|
+      one = User.find(user_id)
+      one.ability = person_finals[one.id - 1]
+      one.save!
+    end
   end
 
   def self.calc_init_item_calibrations
@@ -66,7 +77,7 @@ class Problem < ApplicationRecord
     user_count = User.all.count # 受験者数　@TODO 受験者を誰にするか決める,
     problem_count = Problem.count
     incorrect_odds = [] # 誤答のログ・オッズ
-    Problem.all.each do |problem|
+    Problem.order(:id).each do |problem|
       correct_count = problem.user_problems.count
       correct_rate = correct_count / user_count.to_f # 正答数
       incorrect_rate = 1 - correct_rate              # 誤答率
