@@ -1,16 +1,34 @@
-default: &default
-  adapter: sqlite3
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+# SQLite3
+# default: &default
+#   adapter: sqlite3
+#   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+#   timeout: 5000
 
+# development:
+#   <<: *default
+#   database: db/development.sqlite3
+
+# test:
+#   <<: *default
+#   database: db/test.sqlite3
+
+# production:
+#   <<: *default
+#   database: db/production.sqlite3
+
+# PostgreSQL
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: rikuya
+  password: password
+  host: localhost # RailsサーバとPostgreSQLサーバが同じ場合
 development:
   <<: *default
-  database: db/development.sqlite3
-
+  database: dev_aoj_reco
 test:
   <<: *default
-  database: db/test.sqlite3
-
+  database: test_aoj_reco
 production:
-  <<: *default
-  database: db/production.sqlite3
+   <<: *default

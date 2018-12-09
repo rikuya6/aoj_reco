@@ -18,6 +18,7 @@ gem 'rails-i18n'
 gem 'enumerize'
 gem 'kaminari'
 gem 'activerecord-import'
+gem 'pg' # 開発環境でも利用する
 
 group :development, :test do
   gem 'sqlite3'
@@ -43,7 +44,3 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 # gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-group :production do
-  gem 'pg'
-end
