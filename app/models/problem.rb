@@ -2,7 +2,7 @@
 #
 # Table name: problems
 #
-#  id            :integer          not null, primary key
+#  id            :bigint(8)        not null, primary key
 #  code          :string           not null
 #  title         :string           not null
 #  time_limit    :string           not null
@@ -11,7 +11,7 @@
 #  submissions   :integer          not null
 #  success_rate  :string           not null
 #  volume        :string
-#  large_cl      :string
+#  difficulty    :float
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #

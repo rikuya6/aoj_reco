@@ -46,20 +46,41 @@ class Aoj::User < Aoj::Api
     raise Exception, "users[#{page}]が空です" unless users.present?
 
     converted = []
+
     users.each do |user|
       converted << {
         code:          user['id'],
-        name:          user['name'],
-        submissions:   user['status']['submissions']
-        solved:        user['status']['solved']
-        accepted:      user['status']['accepted']
-        wronganswer:   user['status']['wrongAnswer']
-        timelimit:     user['status']['timeLimit']
-        memorylimit:   user['status']['memoryLimit']
-        outputlimit:   user['status']['outputLimit']
-        compileerror:  user['status']['compileError']
-        runtimeerror:  user['status']['runtimeError']
+        name:          user['name']
       }
+      status = nil
+      if user['status'].present?
+        status =
+          {
+            submissions:   user['status']['submissions'],
+            solved:        user['status']['solved'],
+            accepted:      user['status']['accepted'],
+            wronganswer:   user['status']['wrongAnswer'],
+            timelimit:     user['status']['timeLimit'],
+            memorylimit:   user['status']['memoryLimit'],
+            outputlimit:   user['status']['outputLimit'],
+            compileerror:  user['status']['compileError'],
+            runtimeerror:  user['status']['runtimeError']
+          }
+      else
+        status =
+        {
+          submissions:   0,
+          solved:        0,
+          accepted:      0,
+          wronganswer:   0,
+          timelimit:     0,
+          memorylimit:   0,
+          outputlimit:   0,
+          compileerror:  0,
+          runtimeerror:  0
+        }
+      end
+      converted.last.merge! status
     end
 
     converted

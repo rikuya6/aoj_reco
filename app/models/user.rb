@@ -2,24 +2,21 @@
 #
 # Table name: users
 #
-#  id              :integer          not null, primary key
-#  email           :string           not null
-#  administrator   :boolean          default(FALSE), not null
-#  code            :string
-#  name            :string
-#  submissions     :integer          default(0), not null
-#  solved          :integer          default(0), not null
-#  accepted        :integer          default(0), not null
-#  wronganswer     :integer          default(0), not null
-#  timelimit       :integer          default(0), not null
-#  memorylimit     :integer          default(0), not null
-#  outputlimit     :integer          default(0), not null
-#  compileerror    :integer          default(0), not null
-#  runtimeerror    :integer          default(0), not null
-#  last_submit_at  :datetime
-#  password_digest :string           not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id           :bigint(8)        not null, primary key
+#  code         :string           not null
+#  name         :string           not null
+#  submissions  :integer          default(0), not null
+#  solved       :integer          default(0), not null
+#  accepted     :integer          default(0), not null
+#  wronganswer  :integer          default(0), not null
+#  timelimit    :integer          default(0), not null
+#  memorylimit  :integer          default(0), not null
+#  outputlimit  :integer          default(0), not null
+#  compileerror :integer          default(0), not null
+#  runtimeerror :integer          default(0), not null
+#  ability      :float
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
 #
 
 class User < ApplicationRecord

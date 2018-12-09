@@ -31,4 +31,5 @@ test:
   <<: *default
   database: test_aoj_reco
 production:
-   <<: *default
+  database: pro_aoj_reco
+  <<: *default
