@@ -7,9 +7,6 @@
         <th class="text-center">volume</th>
         <th class="text-center">コード</th>
         <th class="text-center">タイトル</th>
-        <% if current_user %>
-          <th class="text-center">ステータス</th>
-        <% end %>
         <th class="text-center">解いたユーザ数</th>
         <th class="text-center">提出数</th>
         <th class="text-center">正答率</th>
@@ -17,16 +14,13 @@
     </thead>
     <tbody>
       <% @problems.each do |problem| %>
-        <% solved = problem.solved?(current_user) if current_user %>
+        <% solved = problem.solved?(User.first) %>
         <tr class="<%= solved ? 'success' : nil %>">
           <td class="text-center"><%= problem.id %></td>
           <td class="text-center"><%= problem.volume %></td>
           <td class="text-center"><%= problem.code %></td>
           <% url = 'http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?lang=jp&id=' %>
           <td><%= link_to problem.title, url + problem.code, target: '_blank' %></td>
-          <% if current_user %>
-            <td class="text-center">   <%= solved ? '解いた' : '' %></td>
-          <% end %>
           <td class="text-right"><%= problem.solved_user %></td>
           <td class="text-right"><%= problem.submissions %></td>
           <td class="text-cnter"><%= problem.success_rate %>%</td>

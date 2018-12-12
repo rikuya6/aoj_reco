@@ -19,7 +19,7 @@
 class Problem < ApplicationRecord
 
   # 定数
-  MAX_DIFFICULTY = 100.0
+  MAX_DIFFICULTY = #{@@count}.0
 
 
   # 関連
@@ -45,6 +45,10 @@ class Problem < ApplicationRecord
 
   # クラスメソッド
   def self.estimate_prox
+    @@count = 50
+    @@user_count = UserProblem.group(:user_id).having("COUNT(*) >= #{@@count}").count.count # 受験者数　@@TODO 受験者を誰にするか決める,
+    @@problem_count = UserProblem.group(:problem_id).having("COUNT(*) >= 1").count.count
+    return unless @@user_count > 2
     item = calc_init_item_calibrations # 初期項目困難度
     # p '初期項目困難度', item[:init_item_calibrations]
     person = calc_init_person_measures # 初期受験者能力
@@ -59,36 +63,45 @@ class Problem < ApplicationRecord
     # p '最終受験者能力', person_finals
 
     # モデルの更新
-    Problem.order(:id).each do |one|
-      one.difficulty = person_finals[one.id - 1]
-      one.save!
+    ActiveRecord::Base.transaction do
+      Problem.update_all(difficulty: -999)
+      User.update_all(ability: -999)
+      Problem.where.not(id: @@exclusion_problem_ids).order(:id).each do |one|
+        one.difficulty = item_finals[one.id]
+        one.save!
+      end
+      user_problems = UserProblem.group(:user_id).having("COUNT(*) >= #{@@count}").order(:user_id).count # 「項目」となる問題を解いたユーザのみを利用する
+      user_problems.each do |user_id, _|
+        one = User.find(user_id)
+        one.ability = person_finals[user_id]
+        one.save!
+      end
     end
-    user_problems = UserProblem.group(:user_id).having('count_all >= 50').count # 「項目」となる問題を解いたユーザのみを利用する
-    user_problems.each do |user_id, _|
-      one = User.find(user_id)
-      one.ability = person_finals[one.id - 1]
-      one.save!
-    end
+
+    true # 正常終了
   end
 
   def self.calc_init_item_calibrations
     # 初期項目困難度を計算する
     # 初めに、項目困難度の線形化し誤答のログ・オッズを求める
-    user_count = User.all.count # 受験者数　@TODO 受験者を誰にするか決める,
-    problem_count = Problem.count
-    incorrect_odds = [] # 誤答のログ・オッズ
-    Problem.order(:id).each do |problem|
-      correct_count = problem.user_problems.count
-      correct_rate = correct_count / user_count.to_f # 正答数
-      incorrect_rate = 1 - correct_rate              # 誤答率
-      incorrect_odds << Math.log(incorrect_rate / correct_rate)
+    @@exclusion_problem_ids = Problem.select(:id).where.not(id: UserProblem.select(:problem_id).group(:problem_id).having("COUNT(*) >= #{@@count}")).order(:id)
+    incorrect_odds = {} # 誤答のログ・オッズ
+    Problem.where.not(id: @@exclusion_problem_ids).order(:id).each do |problem|
+      # correct_count = problem.user_problems.count
+      correct_count = Problem.joins(user_problems: :user).where('user_problems.problem_id = ?', problem.id)
+                             .where('user_problems.user_id IN (?)', UserProblem.select(:user_id).group(:user_id).having("COUNT(*) >= #{@@count}"))
+                             .where('user_problems.problem_id NOT IN (?)', @@exclusion_problem_ids)
+                             .count
+      correct_rate = correct_count / @@user_count.to_f # 正答率
+      incorrect_rate = 1 - correct_rate                # 誤答率
+      incorrect_odds[problem.id] = Math.log(incorrect_rate / correct_rate)
     end
     # p incorrect_odds
     # 初期項目困難度の計算
     item = {}
     item[:incorrect_odds] = incorrect_odds
-    item[:incorrect_odds_mean] = incorrect_odds.sum / problem_count # ログ・オッズの平均値
-    item[:init_item_calibrations] = incorrect_odds.map { |w| w - item[:incorrect_odds_mean] } # 初期項目困難度
+    item[:incorrect_odds_mean] = incorrect_odds.values.sum / @@problem_count # ログ・オッズの平均値
+    item[:init_item_calibrations] = incorrect_odds.transform_values { |w| w - item[:incorrect_odds_mean] } # 初期項目困難度
 
     item
   end
@@ -96,29 +109,29 @@ class Problem < ApplicationRecord
 
   def self.calc_init_person_measures
     # 正答のログ・オッズを計算する。計算結果が、初期受験者能力となる。
-    user_count = User.all.count # @TODO 受験者を誰にするか決める
-    correct_odds = [] # 正答のログ・オッズ
-    User.all.each do |user|
+    correct_odds = {} # 正答のログ・オッズ
+    UserProblem.group(:user_id).having("COUNT(*) >= #{@@count}").order(:user_id).count.each do |user_id, _|
+      user = User.find(user_id)
       correct_count = user.user_problems.count
-      correct_rate = correct_count / (user_count - 1).to_f # 正答率。 (受験者数 - 1)とする
+      correct_rate = correct_count / @@problem_count.to_f  # 正答率
       incorrect_rate = 1 - correct_rate                    # 誤答率
-      correct_odds << Math.log(correct_rate / incorrect_rate)
+      correct_odds[user_id] = Math.log(correct_rate / incorrect_rate)
     end
-    correct_odds_mean = correct_odds.sum / user_count.to_f
+    correct_odds_mean = correct_odds.values.sum / @@user_count.to_f
     # 初期受験者能力。ただし、初期項目困難度の計算時に原点を定める作業を行っている場合に限る
     { init_person_measures: correct_odds, init_person_measures_mean: correct_odds_mean }
   end
   private_class_method :calc_init_person_measures
 
   def self.calc_unbiased_variance(vers, mean)
-    vers.map { |ver| (ver - mean) ** 2 }.sum / (vers.size - 1) # 不偏分散
+    vers.transform_values { |ver| (ver - mean) ** 2 }.values.sum / (vers.size - 1) # 不偏分散
   end
   private_class_method :calc_unbiased_variance
 
 
   def self.calc_final_calibrations(u, v, init_items)
     ef = expansion_factor(u, v)
-    init_items.map { |item| item * ef }
+    init_items.transform_values { |item| item * ef }
   end
   private_class_method :calc_final_calibrations
 
@@ -174,7 +187,7 @@ class Problem < ApplicationRecord
   # メソッド
   def solved?(user)
     return false unless user.present?
-    UserProblem.find_by(user_id: user.id, problem_id: id).try!(:solved)
+    UserProblem.find_by(user_id: user.id, problem_id: id)
   end
 
 
