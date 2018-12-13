@@ -1,10 +1,16 @@
 class TopController < GuestController
 
   def index
-    @problems = Problem.page(params[:page])
+    @problems = Problem.order(:id).page(params[:page])
   end
 
   def about
+  end
+
+  def recommend
+    user = User.find_by(code: params[:code])
+    return redirect_to :root, alert: "#{params[:code]}は見つかりませんでした。" if user.blank?
+    @recommends = Problem.recommend user
   end
 
   def not_found

@@ -159,7 +159,7 @@ class Problem < ApplicationRecord
       ptheta = 1 / (1 + Math.exp(- 1.7 * (theta - b)))
       if ptheta >= 0.9
         ret[:easy] << problem if ret[:easy].size < 3
-      elsif ptheta >= 0.75
+      elsif ptheta >= 0.70
         ret[:normal] << problem if ret[:normal].size < 3
       else
         ret[:hard] << problem if ret[:hard].size < 3

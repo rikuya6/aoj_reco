@@ -1,0 +1,33 @@
+<h1 class="page-header">推薦問題(IDの昇順で解いていない問題を3つずつ)</h1>
+<% @recommends.each do |key, problems| %>
+  <div class="table-responsive">
+    <h2><%= I18n.t("recommend.#{key}") %></h2>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th class="text-center">ID</th>
+          <th class="text-center">volume</th>
+          <th class="text-center">コード</th>
+          <th class="text-center">タイトル</th>
+          <th class="text-center">解いたユーザ数</th>
+          <th class="text-center">提出数</th>
+          <th class="text-center">正答率</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% problems.each do |problem| %>
+          <tr>
+            <td class="text-center"><%= problem.id %></td>
+            <td class="text-center"><%= problem.volume %></td>
+            <td class="text-center"><%= problem.code %></td>
+            <% url = 'http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?lang=jp&id=' %>
+            <td><%= link_to problem.title, url + problem.code, target: '_blank' %></td>
+            <td class="text-right"><%= problem.solved_user %></td>
+            <td class="text-right"><%= problem.submissions %></td>
+            <td class="text-cnter"><%= problem.success_rate %>%</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

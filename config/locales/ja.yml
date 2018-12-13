@@ -1,4 +1,8 @@
 ja:
+  recommend:
+    easy: 'イージー(90%の確率で解ける)'
+    normal: 'ノーマル(70%の確率で解ける)'
+    hard: 'ハード'
   activerecord:
     models:
       admin: '管理者'

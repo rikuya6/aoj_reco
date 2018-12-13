@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root 'top#index'
-  get 'about'  => 'top#about', as: 'about'
+  get 'about' => 'top#about', as: 'about'
+  get 'recommend' => 'top#recommend', as: 'recommend'
 
   namespace :admin do
     root to: 'sessions#new'

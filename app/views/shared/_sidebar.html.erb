@@ -1,5 +1,8 @@
 <div class="col-sm-3 col-md-2 sidebar">
   <ul class="nav nav-sidebar">
     <li class="<%= active?('top', 'index') %>"><%= link_to '問題一覧', root_path %></li>
+    <% if active?('top', 'recommend') %>
+      <li class="active"><%= link_to '問題推薦', recommend_path %></li>
+    <% end %>
   </ul>
 </div>
