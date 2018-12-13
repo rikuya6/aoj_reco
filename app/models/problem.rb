@@ -19,7 +19,6 @@
 class Problem < ApplicationRecord
 
   # 定数
-  MAX_DIFFICULTY = #{@@count}.0
 
 
   # 関連
@@ -44,10 +43,18 @@ class Problem < ApplicationRecord
 
 
   # クラスメソッド
+  def self.set_estimate_data
+    @@u_count = 50
+    @@p_count = 10
+    @@user_count = UserProblem.group(:user_id).having("COUNT(*) >= #{@@u_count}").count.count # 受験者数　@@TODO 受験者を誰にするか決める,
+    @@problem_count = UserProblem.group(:problem_id).having("COUNT(*) >= #{@@p_count}").count.count
+    @@exclusion_problem_ids = Problem.select(:id).where.not(id: UserProblem.select(:problem_id).group(:problem_id).having("COUNT(*) >= #{@@p_count}")).order(:id)
+    @@problems = Problem.where.not(id: @@exclusion_problem_ids).order(:id)
+    @@user_problems_select_user_id = UserProblem.select(:user_id).group(:user_id).having("COUNT(*) >= #{@@u_count}").order(:user_id)
+  end
+
   def self.estimate_prox
-    @@count = 50
-    @@user_count = UserProblem.group(:user_id).having("COUNT(*) >= #{@@count}").count.count # 受験者数　@@TODO 受験者を誰にするか決める,
-    @@problem_count = UserProblem.group(:problem_id).having("COUNT(*) >= 1").count.count
+    set_estimate_data
     return unless @@user_count > 2
     item = calc_init_item_calibrations # 初期項目困難度
     # p '初期項目困難度', item[:init_item_calibrations]
@@ -66,14 +73,13 @@ class Problem < ApplicationRecord
     ActiveRecord::Base.transaction do
       Problem.update_all(difficulty: -999)
       User.update_all(ability: -999)
-      Problem.where.not(id: @@exclusion_problem_ids).order(:id).each do |one|
+      @@problems.each do |one|
         one.difficulty = item_finals[one.id]
         one.save!
       end
-      user_problems = UserProblem.group(:user_id).having("COUNT(*) >= #{@@count}").order(:user_id).count # 「項目」となる問題を解いたユーザのみを利用する
-      user_problems.each do |user_id, _|
-        one = User.find(user_id)
-        one.ability = person_finals[user_id]
+      @@user_problems_select_user_id.each do |user_problem| # 「項目」となる問題を解いたユーザのみを利用する
+        one = user_problem.user
+        one.ability = person_finals[one.id]
         one.save!
       end
     end
@@ -84,12 +90,11 @@ class Problem < ApplicationRecord
   def self.calc_init_item_calibrations
     # 初期項目困難度を計算する
     # 初めに、項目困難度の線形化し誤答のログ・オッズを求める
-    @@exclusion_problem_ids = Problem.select(:id).where.not(id: UserProblem.select(:problem_id).group(:problem_id).having("COUNT(*) >= #{@@count}")).order(:id)
     incorrect_odds = {} # 誤答のログ・オッズ
-    Problem.where.not(id: @@exclusion_problem_ids).order(:id).each do |problem|
+    @@problems.each do |problem|
       # correct_count = problem.user_problems.count
       correct_count = Problem.joins(user_problems: :user).where('user_problems.problem_id = ?', problem.id)
-                             .where('user_problems.user_id IN (?)', UserProblem.select(:user_id).group(:user_id).having("COUNT(*) >= #{@@count}"))
+                             .where('user_problems.user_id IN (?)', @@user_problems_select_user_id)
                              .where('user_problems.problem_id NOT IN (?)', @@exclusion_problem_ids)
                              .count
       correct_rate = correct_count / @@user_count.to_f # 正答率
@@ -110,12 +115,12 @@ class Problem < ApplicationRecord
   def self.calc_init_person_measures
     # 正答のログ・オッズを計算する。計算結果が、初期受験者能力となる。
     correct_odds = {} # 正答のログ・オッズ
-    UserProblem.group(:user_id).having("COUNT(*) >= #{@@count}").order(:user_id).count.each do |user_id, _|
-      user = User.find(user_id)
+    @@user_problems_select_user_id.each do |user_problem|
+      user = user_problem.user
       correct_count = user.user_problems.count
       correct_rate = correct_count / @@problem_count.to_f  # 正答率
       incorrect_rate = 1 - correct_rate                    # 誤答率
-      correct_odds[user_id] = Math.log(correct_rate / incorrect_rate)
+      correct_odds[user.id] = Math.log(correct_rate / incorrect_rate)
     end
     correct_odds_mean = correct_odds.values.sum / @@user_count.to_f
     # 初期受験者能力。ただし、初期項目困難度の計算時に原点を定める作業を行っている場合に限る
@@ -142,33 +147,16 @@ class Problem < ApplicationRecord
 
 
   def self.recommend(user)
-    user_problem = user.user_problems.joins(:problem).order('problems.difficulty DESC').first
-    return nil unless user_problem.present?
-    problem = user_problem.problem
-    theta = -3
-    max_theta = -3
-
-    b = problem.difficulty / MAX_DIFFICULTY
-    60.times do
-      theta *= 10
-      theta += 1
-      theta /= 10.0
-      ptheta = 1 / (1 + Math.exp(- 1.7 * (theta - b)))
-      p "シータ:" + theta.to_s + "　確率：" + ptheta.to_s
-      if ptheta >= 0.7
-        p theta
-        max_theta = theta
-        break
-      end
-    end
-
     ret = { easy: [], normal: [], hard: [] }
-    Problem.all.each do |problem|
-      next if user.user_problems.find_by(problem_id: problem.id).present?
-      # next if problem.difficulty.to_i < 1
-      b = problem.difficulty.to_f / MAX_DIFFICULTY
-      ptheta = 1 / (1 + Math.exp(- 1.7 * (max_theta - b)))
+    return ret if user.ability == -999 # 推薦対象外
 
+    set_estimate_data
+    theta = user.ability
+    @@problems.each do |problem|
+      # next if problem.difficulty == -999 # 推薦対象外の問題
+      next if user.user_problems.find_by(problem_id: problem.id).present? # すでに解いているためスキップ
+      b = problem.difficulty
+      ptheta = 1 / (1 + Math.exp(- 1.7 * (theta - b)))
       if ptheta >= 0.9
         ret[:easy] << problem if ret[:easy].size < 3
       elsif ptheta >= 0.75
@@ -178,7 +166,6 @@ class Problem < ApplicationRecord
       end
       break if ret[:easy].size == 3 && ret[:normal].size == 3 && ret[:hard].size == 3
     end
-    p max_theta
 
     ret
   end
