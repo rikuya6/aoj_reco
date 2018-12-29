@@ -166,6 +166,7 @@ class Problem < ApplicationRecord
       end
       break if ret[:easy].size == 3 && ret[:normal].size == 3 && ret[:hard].size == 3
     end
+    ret.each { |_, arr| arr.sort!.reverse! }
 
     ret
   end
