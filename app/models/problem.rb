@@ -44,13 +44,14 @@ class Problem < ApplicationRecord
 
   # クラスメソッド
   def self.set_estimate_data
-    @@u_count = 50
+    @@u_count = 10
+    @@u_count2 = 3000
     @@p_count = 10
     @@user_count = UserProblem.group(:user_id).having("COUNT(*) >= #{@@u_count}").count.count # 受験者数　@@TODO 受験者を誰にするか決める,
     @@problem_count = UserProblem.group(:problem_id).having("COUNT(*) >= #{@@p_count}").count.count
     @@exclusion_problem_ids = Problem.select(:id).where.not(id: UserProblem.select(:problem_id).group(:problem_id).having("COUNT(*) >= #{@@p_count}")).order(:id)
     @@problems = Problem.where.not(id: @@exclusion_problem_ids).order(:id)
-    @@user_problems_select_user_id = UserProblem.select(:user_id).group(:user_id).having("COUNT(*) >= #{@@u_count}").order(:user_id)
+    @@user_problems_select_user_id = UserProblem.select(:user_id).group(:user_id).having("COUNT(*) >= #{@@u_count} AND COUNT(*) < #{@@u_count2}").order(:user_id)
   end
 
   def self.estimate_prox
