@@ -1,7 +1,11 @@
-<h1 class="page-header">推薦問題(解ける確率が高い順で解いていない問題を3つずつ)</h1>
-<% @recommends.each do |key, problems| %>
+<%# <h1 class="page-header">推薦問題(解ける確率が高い順で解いていない問題を3つずつ)</h1> %>
+<h1 class="page-header"><%= params[:code] %>さんのための推薦問題</h1>
+<% keys = @recommends.try!(:keys).try!(:sort) %>
+<% keys = [] if keys.blank? %>
+<% keys.each do |key| %>
   <div class="table-responsive">
-    <h2><%= I18n.t("recommend.#{key}") %></h2>
+    <%# I18n.t("recommend.#{key}") %>
+    <h2><%= key * 100 %>%の確率で解ける</h2>
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
@@ -15,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <% problems.each do |problem| %>
+        <% @recommends[key].each do |problem| %>
           <tr>
             <td class="text-center"><%= problem.id %></td>
             <td class="text-center"><%= problem.volume %></td>

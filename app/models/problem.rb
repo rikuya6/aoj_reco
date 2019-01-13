@@ -150,6 +150,7 @@ class Problem < ApplicationRecord
   def self.recommend(user)
     ret = { easy: [], normal: [], hard: [] }
     return ret if user.ability == -999 # 推薦対象外
+    ret = Hash.new { |h, k| h[k] = [] }
 
     set_estimate_data
     theta = user.ability
@@ -158,14 +159,15 @@ class Problem < ApplicationRecord
       next if user.user_problems.find_by(problem_id: problem.id).present? # すでに解いているためスキップ
       b = problem.difficulty
       ptheta = 1 / (1 + Math.exp(- 1.7 * (theta - b)))
-      if ptheta >= 0.9
-        ret[:easy] << problem if ret[:easy].size < 3
-      elsif ptheta >= 0.70
-        ret[:normal] << problem if ret[:normal].size < 3
-      else
-        ret[:hard] << problem if ret[:hard].size < 3
-      end
-      break if ret[:easy].size == 3 && ret[:normal].size == 3 && ret[:hard].size == 3
+      # if ptheta >= 0.9
+      #   ret[:easy] << problem # if ret[:easy].size < 3
+      # elsif ptheta >= 0.70
+      #   ret[:normal] << problem # if ret[:normal].size < 3
+      # else
+      #   ret[:hard] << problem # if ret[:hard].size < 3
+      # end
+      # break # if ret[:easy].size == 3 && ret[:normal].size == 3 && ret[:hard].size == 3
+      ret[ptheta.ceil(2)] << problem
     end
     ret.each { |_, arr| arr.sort!.reverse! }
 
